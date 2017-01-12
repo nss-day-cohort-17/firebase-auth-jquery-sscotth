@@ -9,33 +9,65 @@ firebase.initializeApp({
 firebase.auth().onAuthStateChanged(() => {
   if (firebase.auth().currentUser) {
     // logged in
-    var email = firebase.auth().currentUser.email
-
-    $('.login-page').addClass('hidden')
-    $('.main-page').removeClass('hidden')
-    $('.main-page h1').text(`Welcome ${email}`)
+    showMainPage()
+    displayEmail()
   } else {
     // logged out
-    $('.login-page').removeClass('hidden')
-    $('.main-page').addClass('hidden')
+    showLoginPage()
   }
 })
 
-$('.login-page form').submit((e) => {
+$('.login-page form').submit(doLogin)
+$('.main-page form').submit(doAddTodo)
+$('.register').click(doRegister)
+$('.logout').click(doLogout)
+
+function showLoginPage () {
+  $('.login-page').removeClass('hidden')
+  $('.main-page').addClass('hidden')
+}
+
+function showMainPage () {
+  $('.login-page').addClass('hidden')
+  $('.main-page').removeClass('hidden')
+}
+
+function displayEmail () {
+  var email = firebase.auth().currentUser.email
+  $('.main-page h1').text(`Welcome ${email}`)
+}
+
+function doLogin (e) {
   var email = $('input[type="email"]').val()
   var password = $('input[type="password"]').val()
 
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
-    .then(() => $('form')[0].reset())
+    .then(clearLoginForm)
+    .catch(handleLoginErrors)
 
   e.preventDefault()
-})
+}
 
-$('.logout').click(() => firebase.auth().signOut())
+function doRegister (e) {
+  var email = $('input[type="email"]').val()
+  var password = $('input[type="password"]').val()
 
-$('.main-page form').submit((e) => {
+  firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(clearLoginForm)
+    .catch(handleLoginErrors)
+
+  e.preventDefault()
+}
+
+function doLogout () {
+  firebase.auth().signOut()
+}
+
+function doAddTodo (e) {
   var task = $('.main-page input[type="text"]').val()
   var uid = firebase.auth().currentUser.uid
   $.post(
@@ -44,4 +76,12 @@ $('.main-page form').submit((e) => {
   ).then(res => console.log(res.name))
 
   e.preventDefault()
-})
+}
+
+function clearLoginForm () {
+  $('form').trigger('reset')
+}
+
+function handleLoginErrors (err) {
+  alert(err.message)
+}
