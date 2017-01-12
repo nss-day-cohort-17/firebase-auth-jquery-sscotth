@@ -21,7 +21,7 @@ firebase.auth().onAuthStateChanged(() => {
   }
 })
 
-$('form').submit((e) => {
+$('.login-page form').submit((e) => {
   var email = $('input[type="email"]').val()
   var password = $('input[type="password"]').val()
 
@@ -29,6 +29,19 @@ $('form').submit((e) => {
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(() => $('form')[0].reset())
+
+  e.preventDefault()
+})
+
+$('.logout').click(() => firebase.auth().signOut())
+
+$('.main-page form').submit((e) => {
+  var task = $('.main-page input[type="text"]').val()
+  var uid = firebase.auth().currentUser.uid
+  $.post(
+    `https://auth-proj-a6516.firebaseio.com/${uid}.json`,
+    JSON.stringify({ task: task })
+  ).then(res => console.log(res.name))
 
   e.preventDefault()
 })
