@@ -1,0 +1,21 @@
+{
+  "name": "firebase-auth-jquery-sscotth",
+  "homepage": "https://github.com/nss-day-cohort-17/firebase-auth-jquery-sscotth",
+  "authors": [
+    "Scott Humphries <git@sscotth.io>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "bootstrap": "^3.3.7"
+  }
+}
